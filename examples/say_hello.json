@@ -1,0 +1,72 @@
+{
+  "name" : "say_hello",
+  "description" : null,
+  "type" : "USER",
+  "intents" : [ ],
+  "entities" : [ ],
+  "dialog" : [ {
+    "metadata" : {
+      "platformVersion" : "1.0"
+    },
+    "main" : true,
+    "name" : "say_hello",
+    "context" : {
+      "variables" : {
+        "name" : "string"
+      }
+    },
+    "states" : {
+      "askName" : {
+        "component" : "System.Text",
+        "properties" : {
+          "prompt" : "What is your name?",
+          "variable" : "name"
+        },
+        "transitions" : { }
+      },
+      "sayHello" : {
+        "component" : "say_hello",
+        "properties" : {
+          "name" : "${name.value}"
+        },
+        "transitions" : {
+          "return" : "done"
+        }
+      }
+    }
+  } ],
+  "componentServices" : [ {
+    "name" : "OMCe",
+    "description" : ".",
+    "url" : "https://server:443/mobile/custom/say_hello/components",
+    "headers" : [ ],
+    "credentials" : {
+      "type" : "mcs",
+      "mobileBackendId" : "06f4ef0b",
+      "anonymous" : true,
+      "username" : null,
+      "anonymousKeyKey" : null,
+      "passwordKey" : null
+    }
+  } ],
+  "trainingDataList" : [ ],
+  "channels" : [ {
+    "name" : "System_Bot_Test",
+    "description" : "Used by the BOT test feature. If it is disabled, the test UI will not work for this BOT.",
+    "enabled" : true,
+    "config" : {
+      "type" : "test"
+    }
+  } ],
+  "settings" : {
+    "createdOn" : "2017-05-23T23:52:37.087Z",
+    "updatedOn" : "2017-05-23T23:52:37.087Z",
+    "links" : null,
+    "settings" : {
+      "Multistage_Pipeline" : true,
+      "Verbose_Output" : false,
+      "Result_Size" : 10,
+      "Pipeline_Output_Size" : 100
+    }
+  }
+}
