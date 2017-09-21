@@ -9,12 +9,13 @@ var userReservation;
 var fullSeatMap = {};
 var headers = {
   'Content-Type' : 'application/json',
-  'Accept' : 'application/json'
+  'Accept' : 'application/json',
+  'Authorization' : 'Basic c3VuZy5oeWUuamVvbkBvcmFjbGUuY29tOndlbGNvbWUx'
 }
 var currentDate;
 var startingTime;
 var endingTime;
-var baseUrl = "https://msrapi-gse00013250.apaas.us6.oraclecloud.com/v1/";
+var baseUrl = "http://129.150.84.190:8080/v1/";
 
 function message_generation(date, username) {
 
@@ -24,8 +25,8 @@ function message_generation(date, username) {
       startingTime = currentDate + "T09:00:00";
       endingTime = currentDate + "T18:01:45";
 
-      var availableSeatURL = baseUrl+ "reservations/findAvailableSeats?startingTime="+ startingTime +"&endingTime=" + endingTime;
-      var availableSeatByUserURL = baseUrl+ "reservations/findByUser/" + username+  "?startingTime="+ startingTime +"&endingTime=" + endingTime;
+      var availableSeatURL = baseUrl+ "reservations/findAvailableSeats?email=" + username + "&startingTime="+ startingTime +"&endingTime=" + endingTime;
+      var availableSeatByUserURL = baseUrl+ "reservations/findByUser?email=" + username+ "&startingTime="+ startingTime +"&endingTime=" + endingTime;
 
       var options = {
           url: availableSeatURL,
@@ -44,7 +45,7 @@ function message_generation(date, username) {
           if (!error && response.statusCode == 200) {
               var seatList = JSON.parse(body);
               var availableSeatList = "";
-
+              console.log("first call start", seatList.length);
               for(var i =0; i < seatList.length; i++ ){
                   if(i == 0 ) availableSeatList = seatList[i].seatNo;
                   else availableSeatList += ", " + seatList[i].seatNo;
@@ -54,8 +55,10 @@ function message_generation(date, username) {
               }
               availableSeat = availableSeatList;
 
-
               request(options_user, function (error, response, body) {
+                console.log("this is error",response.statusCode);
+                console.log("this is options_user",availableSeatByUserURL);
+
                   if (!error && response.statusCode == 200) {
                       console.log("availableSeatByUserURL",availableSeatByUserURL);
                       userReservation = JSON.parse(body);
@@ -66,7 +69,6 @@ function message_generation(date, username) {
       })
     });
 }
-
 
 module.exports = {
 
@@ -83,15 +85,14 @@ module.exports = {
     ),
 
     invoke: (conversation, done) => {
-        const date = "2017-10-27";
+        const date = "2017-09-22";
         const username = conversation.properties().username;
         console.log(conversation.properties());
         var TextFromUser = conversation.request().message.payload.text;
         console.log("TextFromUser",TextFromUser);
-
+        var message = "This is error msg. Please let admin knows."
         message_generation(date, username).then(
             function () {
-
               if(count == 1) {
                 console.log("first");
                 conversation.reply({ text: 'date :' + date + ', username :' + username});
@@ -107,13 +108,13 @@ module.exports = {
 
                 var isAvailable = fullSeatMap[results[0]];
 
-                if(isAvailable == undefined){
-                  console.log("isAvailable", isAvailable)
-                  conversation.reply({ text: "Please select available seat."});
+                if(isAvailable == null || isAvailable == undefined){
+                  console.log("isAvailable", isAvailable);
+                  message = "Please select available seat.";
                 }
-                if(userReservation != ""){
-                  console.log("userReservation", userReservation)
-                  conversation.reply({ text: "You already made reservation for this day. Please try different date"});
+                else if(userReservation != ""){
+                  console.log("userReservation is not empty");
+                  message = "You already made reservation for this day. Please try different date";
                 }
                 else{
                     var reservationUrl = baseUrl+ "reservations/";
@@ -121,25 +122,24 @@ module.exports = {
                         url: reservationUrl,
                         method: 'POST',
                         headers: headers,
-                        json: true,
+                        json:true,
                         body : {
-                          "seatNo" : isAvailable.seatNo,
                           "email" : username,
+                          "endingTime" : endingTime,
                           "reservationDate" : currentDate,
-                          "startingTime" : startingTime,
-                          "endingTime" : endingTime
+                          "seatNo" : isAvailable.seatNo,
+                          "startingTime" : startingTime
                         }
                     }
-
                     request(options_reservation, function (error, response, body) {
                         if (!error && response.statusCode == 200) {
-                          //  console.log("availableSeatByUserURL",body);
+                          message = "Your reservation has been made successfully."
                         }
                     })
 
 
                 }
-
+                conversation.reply({ text: message});
                 conversation.keepTurn(false);
                 conversation.transition();
                 count--;

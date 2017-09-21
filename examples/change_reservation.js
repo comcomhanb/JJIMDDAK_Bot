@@ -1,6 +1,7 @@
 "use strict";
 
 var log4js = require('log4js');
+var request = require('request');
 var logger = log4js.getLogger();
 var headers = {
   'Content-Type' : 'application/json',
@@ -11,8 +12,7 @@ var currentDate;
 var startingTime;
 var endingTime;
 var baseUrl = "http://129.150.84.190:8080/v1/";
-var request = require('request');
-var message = "this is error. Please let admin knows."
+
 function message_generation(date, username) {
   return new Promise(function (resolve, reject) {
 
@@ -21,44 +21,21 @@ function message_generation(date, username) {
     endingTime = currentDate + "T18:01:45";
 
     var availableSeatByUserURL = baseUrl+ "reservations/findByUser?email=" + username+ "&startingTime="+ startingTime +"&endingTime=" + endingTime;
-    var deleteReservationURL = baseUrl+ "reservations/";
 
     var options = {
         url: availableSeatByUserURL,
         method: 'GET',
         headers: headers
     }
+    console.log("availableSeatByUserURL", availableSeatByUserURL);
     request(options, function (error, response, body) {
+      console.log("error",error);
+
+        console.log("response.statusCode", response.statusCode);
+
         if (!error && response.statusCode == 200) {
-            console.log("LIST!",JSON.parse(body));
-            var seatList = JSON.parse(body);
-            var deleteReservationURL = "";
-            var options_delete = {
-                url: deleteReservationURL,
-                method: 'DELETE',
-                headers: headers
-            }
-            if(seatList.length == 0){
-                message = "We cannot find your reservation for "+ date + ". Please make sure and try again. ";
-                resolve();
-            }
-            else {
-                    deleteReservationURL = baseUrl+ "reservations/" +  seatList[0].id;
-                    var options_delete = {
-                        url: deleteReservationURL,
-                        method: 'DELETE',
-                        headers: headers
-                    };
-                    request(options_delete, function (error, response, body) {
-                        if (!error && (response.statusCode == 200 ||response.statusCode == 204)) {
-                            message = "Your reservation for " + date + " has been successfully deleted.";
-                            resolve();
-
-                        }
-                    });
-
-
-            }
+            console.log("this is working",body);
+            resolve();
         }
     })
 
@@ -71,7 +48,7 @@ module.exports = {
 
         metadata: () => (
         {
-            "name": "cancel_reservation",
+            "name": "change_reservation",
             "properties": {
               "date": { "type": "string", "required": true },
               "username": { "type": "string", "required": true }
@@ -92,8 +69,7 @@ module.exports = {
             function(){
                 //resolve;
                 console.log("this is cool");
-              //  conversation.reply({ text: 'date :' + date + ', username :' + username});
-                conversation.reply({ text: message});
+                conversation.reply({ text: 'change_reservation date :' + date + ', username :' + username});
                 conversation.transition();
                 done();
             },
