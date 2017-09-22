@@ -21,7 +21,6 @@ function message_generation(date, username) {
     endingTime = currentDate + "T18:01:45";
 
     var availableSeatByUserURL = baseUrl+ "reservations/findByUser?email=" + username+ "&startingTime="+ startingTime +"&endingTime=" + endingTime;
-    var deleteReservationURL = baseUrl+ "reservations/";
 
     var options = {
         url: availableSeatByUserURL,
@@ -82,10 +81,36 @@ module.exports = {
 
     invoke: (conversation, done) => {
 
-        const date = "2017-09-22";
-        const username = conversation.properties().username;
+      const nlpvalue = conversation.properties().date;
+
+      var regResult = nlpvalue.match(new RegExp("date=[0-9]*"));
+      if(regResult== null){
+        conversation.reply({ text: "Please input valid date."});
+        conversation.keepTurn(false);
+        conversation.transition();
+        done();
+        return;
+      }
+      var nlpvalue2 = conversation.properties().username.toLowerCase();
+      var regResult1 = nlpvalue2.match(new RegExp('[A-Za-z0-9._%+-]*@oracle.com'));
+      console.log(">>>>>>>>>regResult1", regResult1 );
+      if(regResult1== null){
+        conversation.reply({ text: "Please enter valid oracle email."});
+        conversation.keepTurn(false);
+        conversation.transition();
+        done();
+        return;
+      }
+      const username = regResult1[0];
+
+      var gettingDate = (regResult[0]).split('=')[1];
+      var utcSeconds = gettingDate.substring(0, gettingDate.length -3);
+      var date = new Date(0); // The 0 there is the key, which sets the date to the epoch
+      date.setUTCSeconds(utcSeconds);
+      date = (JSON.stringify(date).split('T')[0]).substring(1, date.length);
+
         console.log(conversation.properties());
-        var TextFromUser = conversation.request().message.payload.text;
+        var TextFromUser = conversation.request().message.payload.message.text;
         console.log("TextFromUser- canceling",TextFromUser);
 
         message_generation(date, username).then(
