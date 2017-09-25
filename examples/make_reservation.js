@@ -40,6 +40,8 @@ function message_generation_available(date, username) {
           console.log("availableSeatURL", availableSeatURL);
 
           if (!error && response.statusCode == 200) {
+            console.log(">>body", body);
+
               var seatList = JSON.parse(body);
               var availableSeatList = "";
               for(var i =0; i < seatList.length; i++ ){
@@ -52,6 +54,7 @@ function message_generation_available(date, username) {
               availableSeat = availableSeatList;
               resolve();
           }
+          reject();
       })
     });
 }
@@ -67,10 +70,14 @@ function message_generation_available_user(date, username) {
       headers: headers
   }
   request(options_user, function (error, response, body) {
+
       if (!error && response.statusCode == 200) {
           userReservation = JSON.parse(body);
           resolve();
       }
+      console.log("something went wrong")
+      reject();
+
   })
 });
 }

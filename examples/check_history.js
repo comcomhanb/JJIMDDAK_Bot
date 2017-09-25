@@ -78,8 +78,8 @@ module.exports = {
       const username = regResult1[0];
 
         console.log(conversation.properties());
-        var TextFromUser = conversation.request().message.payload.message.text;
-        console.log("TextFromUser- canceling",TextFromUser);
+  //      var TextFromUser = conversation.request().message.payload.message.text;
+  //      console.log("TextFromUser- canceling",TextFromUser);
 
         message_generation(username).then(
             function(){
