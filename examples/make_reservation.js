@@ -168,8 +168,21 @@ module.exports = {
                       conversation.reply({ text: "You've already made a reservation for "+ date + ". " });
                       conversation.transition();
                     } else{
+                    conversation.reply(
+                                {
+                                    "attachment":
+                                    {
+                                        "type": "image",
+                                        "payload": {
+                                            "url": "http://129.150.84.190:7000/jjimddak_image.png"
+                                        }
+                                    }
+                                }
+                            );                        
                       conversation.reply({ text: 'this is available seat for you :' + availableSeat });
                       conversation.reply({ text: "Please enter where you want to seat." });
+                              
+
                       conversation.keepTurn(false);
                       count++;
                     }
