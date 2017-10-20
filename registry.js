@@ -6,6 +6,7 @@ module.exports = {
     'make_reservation': require('./examples/make_reservation'),
     'cancel_reservation': require('./examples/cancel_reservation'),
     'change_reservation': require('./examples/change_reservation'),
-    'check_history': require('./examples/check_history')
+    'check_history': require('./examples/check_history'),
+    'response_in_fb_layout': require('./examples/response_in_fb_layout')
   }
 };

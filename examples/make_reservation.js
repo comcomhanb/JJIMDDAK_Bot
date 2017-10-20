@@ -168,6 +168,8 @@ module.exports = {
                       conversation.reply({ text: "You've already made a reservation for "+ date + ". " });
                       conversation.transition();
                     } else{
+
+                        
                     conversation.reply(
                                 {
                                     "attachment":
