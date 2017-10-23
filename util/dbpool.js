@@ -2,9 +2,9 @@
 var mysql = require('mysql');
 // Initialize pool
 var pool      =    mysql.createPool({
-    host     : '192.168.1.15',
+    host     : 'localhost',
     user     : 'root',
-    password : 'password',
+    password : 'asdfA9744',
     database : 'oracle_code_chatbot',
     connectionLimit : 10,
     waitForConnections:false,
