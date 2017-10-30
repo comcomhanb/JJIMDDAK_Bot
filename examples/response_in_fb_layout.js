@@ -19,7 +19,7 @@ function message_generation(intent) {
 
 		if(intent == "Intent.None") {
 
-		intent = "none" + JSON.stringify(  Math.floor((Math.random() * 3) +1) ) ;
+		intent = "none" + JSON.stringify(  Math.floor((Math.random() * 2) +1) ) ;
 		console.log(intent);
 	}
 		console.log("usal : " + intent);
@@ -194,7 +194,7 @@ module.exports = {
         },
         {
             "intent": "location",
-            "keywords": ['location', '장소', '위치']
+            "keywords": ['location', '장소', '위치', '어디서']
         },
         {
             "intent": "nearbyHotel",
@@ -202,7 +202,7 @@ module.exports = {
         },
         {
             "intent": "transportation",
-            "keywords": ['transportation', '대중 교통', '교통', '가는 법', '어떻게 가', '가는 방법', '오시는']
+            "keywords": ['transportation', '대중 교통', '교통', '가는 법', '어떻게 가', '가는 방법', '오시는', '가는']
         },
         {
             "intent": "when",
@@ -242,19 +242,19 @@ module.exports = {
         },          
         {
             "intent": "officialEvent",
-            "keywords": ['official event', '공식 행사', '공식행사']
-        },                        
+            "keywords": ['official event', 'officialEvent', '공식 행사', '공식행사']
+        },
         {
             "intent": "welcomeReception",
-            "keywords": ['welcome reception', '환영 리셉션', '리셉션', '환영리셉션', '웰컴 리셉션']
+            "keywords": ['welcome reception', 'welcomeReception', '환영 리셉션', '리셉션', '환영리셉션', '웰컴 리셉션']
         },
         {
             "intent": "welcomingEvent",
-            "keywords": ['welcome event', '개막식', '개막 행사']
+            "keywords": ['welcome event','welcomeEvent', 'welcomingEvent', '개막식', '개막 행사']
         },
         {
             "intent": "cultureNight",
-            "keywords": ['culture night', '문화의 밤', '문화의']
+            "keywords": ['culture night','cultureNight', '문화의 밤', '문화의']
         },
         {
             "intent": "awards",
@@ -262,11 +262,11 @@ module.exports = {
         },
         {
             "intent": "technicalTour",
-            "keywords": ['technical tour', '테크니컬 투어', '투어']
+            "keywords": ['technical tour','technicalTour', '테크니컬 투어', '투어']
         },
         {
             "intent": "careerFair",
-            "keywords": ['career fair', '취업 박람회', '취업', "채용"]
+            "keywords": ['career fair','careerFair', '취업 박람회', '취업', "채용"]
         },
         {
             "intent": "majorEvent",
@@ -310,7 +310,7 @@ module.exports = {
         },    
         {
             "intent": "eventMap",
-            "keywords": ['행사장 구성', 'map']
+            "keywords": ['행사장 구성', 'map', '내부']
         },            
         {
             "intent": "MAX",
@@ -318,7 +318,7 @@ module.exports = {
         },        
         {
             "intent": "techFairCompanyOther",
-            "keywords": ['techFairCompanyOther', '다른 참석자']
+            "keywords": ['techFairCompanyOther', '다른 참석자', '업체']
         },          
         {
             "intent": "patentFair",
@@ -358,7 +358,7 @@ module.exports = {
         },
         {
             "intent": "goodRes",
-            "keywords": ['goodRes', '근처 맛집', '맛집']
+            "keywords": ['goodRes', '근처 맛집', '맛집', '근처 밥']
         },
         {
             "intent": "eventDetails",
